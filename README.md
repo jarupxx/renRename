@@ -6,10 +6,15 @@
 
 000, 001～ から 001, 002～ に振りなおせます.
 
-サブフォルダ以下にサブフォルダがあると失敗します.
 ## 使用方法
 
 renRename.py C:\path
+
+## 注意事項
+
+エクスプローラーの名前順とは異なります.
+
+サブフォルダ以下にサブフォルダがあると失敗します.
 
 ## Summary
 
@@ -19,7 +24,11 @@ Serializes all files in the folder passed as an argument.
 
 This program can be serialized from 000, 001~ to 001, 002~.
 
-This program will fail if there are subfolders under subfolders.
-## how to use
+## How to use
 
 renRename.py C:\path
+
+## Notes
+Different from the order of names in Explorer.
+
+This program will fail if there are subfolders under subfolders.
