@@ -2,6 +2,7 @@ import os
 import sys
 import random
 import string
+from natsort import natsorted
 
 def get_all_subfolders(path):
     subfolders = [f.path for f in os.scandir(path) if f.is_dir()]
@@ -23,7 +24,11 @@ def rename_and_move_files(path):
         os.rename(subfolder, temp_subfolder_path)
         os.makedirs(save_subfolder_name)
         i = 1
-        for filename in os.listdir(temp_subfolder_path):
+        # ファイル名を取得し、自然順ソートでソートする
+        sorted_filename = os.listdir(temp_subfolder_path)
+        sorted_filename = natsorted(sorted_filename)
+        for filename in sorted_filename:
+            print(filename)
             file_path = os.path.join(temp_subfolder_path, filename)
             file_extension = os.path.splitext(filename)[1]  # ファイルの拡張子を取得する
             temp_filename = f"{i:03d}{file_extension}"  # ファイル名を連番にリネームする
