@@ -1,10 +1,10 @@
-import PySimpleGUI as sg
-import ctypes
 import os
 import sys
 import random
 import string
+import PySimpleGUI as sg
 import winreg
+import ctypes
 from ctypes import windll, create_unicode_buffer
 from functools import cmp_to_key
 
@@ -56,6 +56,7 @@ def check_winreg():
         value, _ = winreg.QueryValueEx(key, name)
         if value == 1:
             print("Unsupported policy setting:\nTurn off numerical sorting in File Explorer 'NoStrCmpLogical'.")
+            input("Press any key to exit.")
             sys.exit()
     except FileNotFoundError:
         pass
@@ -67,6 +68,7 @@ def check_winreg():
         value, _ = winreg.QueryValueEx(key, name)
         if value == 1:
             print("Unsupported policy setting:\nTurn off numerical sorting in File Explorer 'NoStrCmpLogical'.")
+            input("Press any key to exit.")
             sys.exit()
     except FileNotFoundError:
         pass
@@ -75,11 +77,19 @@ if __name__ == "__main__":
     check_winreg()
     try:
         path = sys.argv[1]
+        if not os.path.isdir(path):
+            print(f"{path} is not a valid directory path.")
+            raise ValueError(f"{path} is not a valid directory path.")
         rename_and_move_files(path)
-    except IndexError:
+    except (IndexError, ValueError):
         try:
             ctypes.windll.shcore.SetProcessDpiAwareness(True)
         except:
             pass
-        path = sg.popup_get_folder('Select folder that you want to serialized', title='renRenWin')
+        while True:
+            path = sg.popup_get_folder('Select folder that you want to serialized', title='renRenWin')
+            if path is None:
+                sys.exit()
+            if os.path.isdir(path):
+                break
         rename_and_move_files(path)
