@@ -2,6 +2,7 @@ import os
 import sys
 import random
 import string
+import winreg
 from ctypes import windll, create_unicode_buffer
 from functools import cmp_to_key
 
@@ -44,5 +45,32 @@ def rename_and_move_files(path):
         os.rmdir(temp_subfolder_path)
 
 if __name__ == "__main__":
-    path = sys.argv[1]
-    rename_and_move_files(path)
+    # レジストリの値を取得
+    key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE,
+                     r"SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer")
+    name = "NoStrCmpLogical"
+    try:
+        value, _ = winreg.QueryValueEx(key, name)
+        if value == 1:
+            print("Unsupported policy setting:\nTurn off numerical sorting in File Explorer 'NoStrCmpLogical'.")
+            sys.exit()
+    except FileNotFoundError:
+        pass
+
+    key = winreg.OpenKey(winreg.HKEY_CURRENT_USER,
+                     r"SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer")
+    name = "NoStrCmpLogical"
+    try:
+        value, _ = winreg.QueryValueEx(key, name)
+        if value == 1:
+            print("Unsupported policy setting:\nTurn off numerical sorting in File Explorer 'NoStrCmpLogical'.")
+            sys.exit()
+    except FileNotFoundError:
+        pass
+
+    try:
+        path = sys.argv[1]
+        rename_and_move_files(path)
+    except IndexError:
+        py_name = os.path.basename(__file__)
+        print("How to use:", py_name, "C:\path")

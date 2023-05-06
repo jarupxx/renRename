@@ -38,5 +38,9 @@ def rename_and_move_files(path):
         os.rmdir(temp_subfolder_path)
 
 if __name__ == "__main__":
-    path = sys.argv[1]
-    rename_and_move_files(path)
+    try:
+        path = sys.argv[1]
+        rename_and_move_files(path)
+    except IndexError:
+        py_name = os.path.basename(__file__)
+        print("How to use:", py_name, "C:\path")
