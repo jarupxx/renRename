@@ -12,7 +12,7 @@ renRename.py C:\path
 
 ## 注意事項
 
-エクスプローラーの名前順にはrenRenWin.pyを使用します.
+エクスプローラーの名前順にはrenRenWin.pyを使用します. ```pip install PySimpleGUI``` が必要です.
 
 サブフォルダ以下にサブフォルダがあると失敗します.
 
@@ -29,6 +29,6 @@ This program can be serialized from 000, 001~ to 001, 002~.
 renRename.py C:\path
 
 ## Notes
-Use renRenWin.py for the Explorer name order.
+Use renRenWin.py for the Explorer name order. Install dependencies with ```pip install PySimpleGUI```
 
 This program will fail if there are subfolders under subfolders.
