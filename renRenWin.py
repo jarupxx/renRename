@@ -1,3 +1,5 @@
+import PySimpleGUI as sg
+import ctypes
 import os
 import sys
 import random
@@ -75,5 +77,9 @@ if __name__ == "__main__":
         path = sys.argv[1]
         rename_and_move_files(path)
     except IndexError:
-        py_name = os.path.basename(__file__)
-        print("How to use:", py_name, "C:\path")
+        try:
+            ctypes.windll.shcore.SetProcessDpiAwareness(True)
+        except:
+            pass
+        path = sg.popup_get_folder('Select folder that you want to serialized', title='renRenWin')
+        rename_and_move_files(path)
