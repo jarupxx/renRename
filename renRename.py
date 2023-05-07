@@ -49,4 +49,4 @@ if __name__ == "__main__":
         rename_and_move_files(path)
         notification.notify(title = py_name, message="Done", timeout=5)
     except (IndexError, ValueError):
-        print("How to use:", py_name, "C:\path")
+        print("Usage:", py_name, "C:\path")

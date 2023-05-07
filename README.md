@@ -25,7 +25,7 @@ Serializes all files in the folder passed as an argument.
 
 This program can be serialized from 000, 001~ to 001, 002~.
 
-## How to use
+## Usage
 
 renRename.py C:\path
 
