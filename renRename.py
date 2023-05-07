@@ -2,6 +2,7 @@ import os
 import sys
 import random
 import string
+from plyer import notification
 from natsort import natsorted
 
 def get_all_subfolders(path):
@@ -39,12 +40,13 @@ def rename_and_move_files(path):
         os.rmdir(temp_subfolder_path)
 
 if __name__ == "__main__":
+    py_name = os.path.basename(__file__)
     try:
         path = sys.argv[1]
         if not os.path.isdir(path):
             print(f"{path} is not a valid directory path.")
             raise ValueError(f"{path} is not a valid directory path.")
         rename_and_move_files(path)
+        notification.notify(title = py_name, message="Done", timeout=5)
     except (IndexError, ValueError):
-        py_name = os.path.basename(__file__)
         print("How to use:", py_name, "C:\path")

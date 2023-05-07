@@ -2,6 +2,7 @@ import os
 import sys
 import random
 import string
+from plyer import notification
 import PySimpleGUI as sg
 import winreg
 import ctypes
@@ -75,6 +76,7 @@ def check_winreg():
 
 if __name__ == "__main__":
     check_winreg()
+    py_name = os.path.basename(__file__)
     try:
         path = sys.argv[1]
         if not os.path.isdir(path):
@@ -93,3 +95,4 @@ if __name__ == "__main__":
             if os.path.isdir(path):
                 break
         rename_and_move_files(path)
+    notification.notify(title = py_name, message="Done", timeout=5)
