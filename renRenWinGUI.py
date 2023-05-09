@@ -74,7 +74,41 @@ def check_winreg():
     except FileNotFoundError:
         pass
 
+def make_gui():
+    sg.theme('DarkGray2')
+
+    # GUIのレイアウト
+    layout = [
+        [sg.Text('Select folder that you want to serialized.')],
+        [sg.Input(), sg.FolderBrowse()],
+        [sg.Column([[sg.Button('Serialized', size=(24,1))]],
+        element_justification='right', expand_x=True, expand_y=True,)]
+    ]
+
+    # ウィンドウの作成
+    window = sg.Window('renRenWin', layout)
+
+    # イベントループ
+    while True:
+        event, values = window.read()
+        if event == sg.WINDOW_CLOSED or event == 'Cancel':
+            break
+        elif event == 'Serialized':
+            path = values[0]
+            # enable_logging = values[1]
+            if path is None:
+                sys.exit()
+            if os.path.isdir(path):
+                break
+    rename_and_move_files(path)
+    window.close()
+
 if __name__ == "__main__":
+    # DPIを指定する
+    try:
+        ctypes.windll.shcore.SetProcessDpiAwareness(True)
+    except:
+        pass
     check_winreg()
     py_name = os.path.basename(__file__)
     try:
@@ -84,15 +118,5 @@ if __name__ == "__main__":
             raise ValueError(f"{path} is not a valid directory path.")
         rename_and_move_files(path)
     except (IndexError, ValueError):
-        try:
-            ctypes.windll.shcore.SetProcessDpiAwareness(True)
-        except:
-            pass
-        while True:
-            path = sg.popup_get_folder('Select folder that you want to serialized', title='renRenWin')
-            if path is None:
-                sys.exit()
-            if os.path.isdir(path):
-                break
-        rename_and_move_files(path)
-    notification.notify(title = py_name, message="Done", timeout=5)
+        make_gui()
+    notification.notify(title = py_name, message="Done.", timeout=5)
