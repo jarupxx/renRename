@@ -1,5 +1,6 @@
 import glob
 import os
+import shutil
 import sys
 import random
 import string
@@ -23,7 +24,8 @@ def natural_sort_cmp(a, b):
     return cmp_func(a, b)
 
 def rename_and_move_files(path):
-    subfolders = get_all_subfolders(path)
+    subfolders = glob.glob(f"{path}/*/")
+    subfolders = [(d.rstrip('\\')) for d in subfolders]
     for subfolder in subfolders:
         print('Target:', subfolder)
         # 元のフォルダ
@@ -31,14 +33,14 @@ def rename_and_move_files(path):
         # 作業フォルダ
         source = string.ascii_letters + string.digits
         random_str = ''.join([random.choice(source) for _ in range(8)])
-        temp_subfolder_name = f"{os.path.basename(subfolder)}" + "Temp_" + random_str
+        temp_subfolder_name = f"{os.path.basename(subfolder)}" + "_Temp" + random_str
         temp_subfolder_path = os.path.join(path, temp_subfolder_name)
-        logging.warning('temp_subfolder_name: %s", temp_subfolder_path: %s', temp_subfolder_name, temp_subfolder_path)
+        logging.warning('temp_subfolder_name: %s", path: %s', temp_subfolder_name, temp_subfolder_path)
         # 元のフォルダをリネームして元のフォルダを作り直す
         os.rename(subfolder, temp_subfolder_path)
         os.makedirs(save_subfolder_name)
         # ファイル名を取得し、エクスプローラー順でソートする
-        sorted_filename = os.listdir(temp_subfolder_path)
+        sorted_filename = glob.glob(f"{temp_subfolder_path}/*.*")
         sorted_filename = sorted(sorted_filename, key=cmp_to_key(natural_sort_cmp))
         # ファイル数からフォーマットを指定する
         d_abs = len(str(abs(len(sorted_filename))))
@@ -60,7 +62,11 @@ def rename_and_move_files(path):
         try:
             os.rmdir(temp_subfolder_path)
         except OSError:
-            pass
+            # 2階層以下はそのまま元のフォルダに移動する
+            for item in os.listdir(temp_subfolder_path):
+                item_path = os.path.join(temp_subfolder_path, item)
+                shutil.move(item_path, save_subfolder_name)
+            os.rmdir(temp_subfolder_path)
 
 def check_winreg():
     # レジストリの値を取得
