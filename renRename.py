@@ -5,6 +5,7 @@ import sys
 import random
 import string
 import logging
+import time
 from plyer import notification
 from natsort import natsorted
 
@@ -15,6 +16,9 @@ def get_all_subfolders(path):
     return subfolders
 
 def rename_and_move_files(path):
+    # 開始時刻を記録する
+    start_time = time.time()
+
     subfolders = glob.glob(f"{path}/*/")
     subfolders = [(d.rstrip('\\')) for d in subfolders]
     for subfolder in subfolders:
@@ -58,6 +62,12 @@ def rename_and_move_files(path):
                 item_path = os.path.join(temp_subfolder_path, item)
                 shutil.move(item_path, save_subfolder_name)
             os.rmdir(temp_subfolder_path)
+    print('Done.')
+    # 処理が3秒超えたら通知をする
+    end_time = time.time()
+    processing_time = end_time - start_time
+    if processing_time > 3:
+        notification.notify(title=py_name, message="Done.", timeout=5)
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
@@ -71,6 +81,5 @@ if __name__ == "__main__":
             print(f"{path} is not a valid directory path.")
             raise ValueError(f"{path} is not a valid directory path.")
         rename_and_move_files(path)
-        notification.notify(title = py_name, message="Done.", timeout=5)
     except (IndexError, ValueError):
         print("Usage:", py_name, '"C:\path"')

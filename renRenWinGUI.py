@@ -5,6 +5,7 @@ import sys
 import random
 import string
 import logging
+import time
 from plyer import notification
 import PySimpleGUI as sg
 import winreg
@@ -24,6 +25,9 @@ def natural_sort_cmp(a, b):
     return cmp_func(a, b)
 
 def rename_and_move_files(path):
+    # 開始時刻を記録する
+    start_time = time.time()
+
     subfolders = glob.glob(f"{path}/*/")
     subfolders = [(d.rstrip('\\')) for d in subfolders]
     for subfolder in subfolders:
@@ -67,6 +71,12 @@ def rename_and_move_files(path):
                 item_path = os.path.join(temp_subfolder_path, item)
                 shutil.move(item_path, save_subfolder_name)
             os.rmdir(temp_subfolder_path)
+    print('Done.')
+    # 処理が3秒超えたら通知をする
+    end_time = time.time()
+    processing_time = end_time - start_time
+    if processing_time > 3:
+        notification.notify(title=py_name, message="Done.", timeout=5)
 
 def check_winreg():
     # レジストリの値を取得
@@ -127,7 +137,9 @@ def make_gui():
     window.close()
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
     logging.disable( logging.CRITICAL )
+    logging.debug('program begins.')
     py_name = os.path.basename(__file__)
     # DPIを指定する
     try:
@@ -143,5 +155,5 @@ if __name__ == "__main__":
             raise ValueError(f"{path} is not a valid directory path.")
         rename_and_move_files(path)
     except (IndexError, ValueError):
+        print("Usage:", py_name, '"C:\path"')
         make_gui()
-    notification.notify(title = py_name, message="Done.", timeout=5)
