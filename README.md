@@ -9,7 +9,7 @@ Install dependencies with ```pip install plyer PySimpleGUI```
 
 ## 使用方法
 
-renRename.py C:\path
+```renRename.py "C:\path"```
 
 ## 注意事項
 
@@ -25,7 +25,7 @@ This program can be serialized from 000.jpg, 001.jpg~ to 001.jpg, 002.jpg~.
 
 ## Usage
 
-renRename.py C:\path
+```renRename.py "C:\path"```
 
 ## Notes
 Use renRenWinGUI.py for the Explorer name order.
