@@ -132,8 +132,12 @@ def make_gui():
             if path is None:
                 sys.exit()
             if os.path.isdir(path):
-                break
-    rename_and_move_files(path)
+                # パスのチェック ルートディレクトリは許可しない
+                if os.path.abspath(path) == os.path.abspath(os.path.join(path, os.pardir)):
+                    print(f"root is not allow path: {path}")
+                    raise ValueError(f"root is not allow path: {path}")
+                    sys.exit()
+                rename_and_move_files(path)
     window.close()
 
 if __name__ == "__main__":
@@ -150,9 +154,14 @@ if __name__ == "__main__":
     try:
         path = sys.argv[1]
         logging.debug('path = {}'.format(path))
+        # パスのチェック ルートディレクトリは許可しない
         if not os.path.isdir(path):
             print(f"{path} is not a valid directory path.")
             raise ValueError(f"{path} is not a valid directory path.")
+        if os.path.isdir(path):
+            if os.path.abspath(path) == os.path.abspath(os.path.join(path, os.pardir)):
+                print(f"root is not allow path: {path}")
+                raise ValueError(f"root is not allow path: {path}")
         rename_and_move_files(path)
     except (IndexError, ValueError):
         print("Usage:", py_name, '"C:\path"')
