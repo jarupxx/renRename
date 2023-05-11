@@ -31,7 +31,7 @@ def rename_and_move_files(path):
         os.rename(subfolder, temp_subfolder_path)
         os.makedirs(save_subfolder_name)
         # ファイル名を取得し、自然順ソートでソートする
-        sorted_filename = glob.glob(f"{temp_subfolder_path}/*.*")
+        sorted_filename = [f for f in os.listdir(temp_subfolder_path) if os.path.isfile(os.path.join(temp_subfolder_path, f))]
         sorted_filename = natsorted(sorted_filename)
         # ファイル数からフォーマットを指定する
         d_abs = len(str(abs(len(sorted_filename))))
@@ -73,4 +73,4 @@ if __name__ == "__main__":
         rename_and_move_files(path)
         notification.notify(title = py_name, message="Done.", timeout=5)
     except (IndexError, ValueError):
-        print("Usage:", py_name, "C:\path")
+        print("Usage:", py_name, '"C:\path"')

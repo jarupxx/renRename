@@ -40,7 +40,7 @@ def rename_and_move_files(path):
         os.rename(subfolder, temp_subfolder_path)
         os.makedirs(save_subfolder_name)
         # ファイル名を取得し、エクスプローラー順でソートする
-        sorted_filename = glob.glob(f"{temp_subfolder_path}/*.*")
+        sorted_filename = [f for f in os.listdir(temp_subfolder_path) if os.path.isfile(os.path.join(temp_subfolder_path, f))]
         sorted_filename = sorted(sorted_filename, key=cmp_to_key(natural_sort_cmp))
         # ファイル数からフォーマットを指定する
         d_abs = len(str(abs(len(sorted_filename))))
