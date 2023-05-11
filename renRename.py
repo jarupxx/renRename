@@ -19,15 +19,15 @@ def rename_and_move_files(path):
     subfolders = [(d.rstrip('\\')) for d in subfolders]
     for subfolder in subfolders:
         print('Target:', subfolder)
-        # 元のフォルダ
+        # 元のフォルダー
         save_subfolder_name = subfolder
-        # 作業フォルダ
+        # 作業フォルダー
         source = string.ascii_letters + string.digits
         random_str = ''.join([random.choice(source) for _ in range(8)])
         temp_subfolder_name = f"{os.path.basename(subfolder)}" + "_Temp" + random_str
         temp_subfolder_path = os.path.join(path, temp_subfolder_name)
         logging.warning('temp_subfolder_name: %s", temp_subfolder_path: %s', temp_subfolder_name, temp_subfolder_path)
-        # 元のフォルダをリネームして元のフォルダを作り直す
+        # 元のフォルダーをリネームして元のフォルダーを作り直す
         os.rename(subfolder, temp_subfolder_path)
         os.makedirs(save_subfolder_name)
         # ファイル名を取得し、自然順ソートでソートする
@@ -53,7 +53,7 @@ def rename_and_move_files(path):
         try:
             os.rmdir(temp_subfolder_path)
         except OSError:
-            # 2階層以下はそのまま元のフォルダに移動する
+            # 2階層以下はそのまま元のフォルダーに移動する
             for item in os.listdir(temp_subfolder_path):
                 item_path = os.path.join(temp_subfolder_path, item)
                 shutil.move(item_path, save_subfolder_name)
