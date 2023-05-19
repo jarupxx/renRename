@@ -1,31 +1,25 @@
 # renRename
 Install dependencies with ```pip install plyer PySimpleGUI```
 ## 概要
-フォルダーを指定してサブフォルダーのファイルをまとめて連番にリネームします.
 
-引数で渡したフォルダーにあるファイルを全てリネームします.
+このソフトウェアを使用すると、特定のフォルダー内のサブフォルダーに含まれるファイルを一括で連番にリネームすることができます。エクスプローラーで表示される名前順に、ファイルに連番を振ることができます。
 
-本ソフトは重複エラーを回避するので1回の操作で 000.jpg, 001.jpg～ から 001.jpg, 002.jpg～ に振りなおせます.
+また、重複回避するので、一度の操作でファイル名を振りなおせます。例えば、000.jpg、001.jpgから001.jpg、002.jpgなどに簡単に振りなおせます。
 
 ## 使用方法
 
-```renRename.py "C:\path"```
+```renRenWinGUI.py "C:\path"```
 
 ## 注意事項
 
-エクスプローラーの名前順には renRenWinGUI.py を使用します.
+自然順ソートが好みなら renRename.py を使用します.
 
 ## Summary
 
-This program serializes files in subfolders by specifying a folder.
-
-Serializes all files in the folder passed as an argument.
-
-This program can be serialized from 000.jpg, 001.jpg~ to 001.jpg, 002.jpg~.
-
+This program allows you to serializes files in subfolders within a specified folder and assign them sequential numbers. It follows the order of names in the Explorer and avoids duplicate errors, enabling you to easily reassign file names from "000.jpg, 001.jpg~" to "001.jpg, 002.jpg~" and so on, all in a single operation.
 ## Usage
 
-```renRename.py "C:\path"```
+```renRenWinGUI.py "C:\path"```
 
 ## Notes
-Use renRenWinGUI.py for the Explorer name order.
+Use renRename.py for prefer natural sorting.
