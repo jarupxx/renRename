@@ -1,5 +1,5 @@
 # renRename
-Install dependencies with ```pip install plyer PySimpleGUI```
+Install dependencies with ```pip install plyer PySimpleGUI natsort```
 ## 概要
 
 このソフトウェアを使用すると、特定のフォルダー内のサブフォルダーに含まれるファイルを一括で連番にリネームすることができます。エクスプローラーで表示される名前順に、ファイルに連番を振ることができます。
