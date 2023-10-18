@@ -87,4 +87,4 @@ if __name__ == "__main__":
                 raise ValueError(f"root is not allow path: {path}")
         rename_and_move_files(path)
     except (IndexError, ValueError):
-        print("Usage:", py_name, '"C:\path"')
+        print("Usage:", py_name, '"C:\\path"')
