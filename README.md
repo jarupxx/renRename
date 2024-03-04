@@ -6,6 +6,8 @@ Install dependencies with ```pip install plyer PySimpleGUI natsort```
 
 また、重複回避するので、一度の操作でファイル名を振りなおせます。例えば、000.jpg、001.jpgから001.jpg、002.jpgなどに簡単に振りなおせます。
 
+ファイルを指定でそのフォルダー内のファイルが連番にリネームされます。
+
 ## 使用方法
 
 ```renRenWinGUI.py "C:\path"```
@@ -17,6 +19,9 @@ Install dependencies with ```pip install plyer PySimpleGUI natsort```
 ## Summary
 
 This program allows you to serializes files in subfolders within a specified folder and assign them sequential numbers. It follows the order of names in the Explorer and avoids duplicate errors, enabling you to easily reassign file names from "000.jpg, 001.jpg~" to "001.jpg, 002.jpg~" and so on, all in a single operation.
+
+If you specify a file, the files in that folder will be serialized.
+
 ## Usage
 
 ```renRenWinGUI.py "C:\path"```
