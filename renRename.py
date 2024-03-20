@@ -6,8 +6,29 @@ import random
 import string
 import logging
 import time
+import locale
 from plyer import notification
 from natsort import natsorted
+
+# メッセージ ["English","Japanese"]
+root_is_not_allow_path = ["root is not allow path","ルートフォルダーは指定できません。"]
+Unsupported_policy_setting = ["Unsupported policy setting:\nTurn off numerical sorting in File Explorer 'NoStrCmpLogical'."
+,"非対応の環境:\nレジストリ 'NoStrCmpLogical' よりファイル名の表示順序が変更されています。"]
+Usage = ["Usage:","使い方:"]
+Target = ["Target:","処理中:"]
+Done = ["Done.","完了しました。"]
+Select_folder_that_you_want_to_serialized = ["Select folder that you want to serialized.","フォルダーを指定してください。"]
+Enable_logging = ["Enable logging.","動作ログを記録する"]
+Serialized = ["Serialized","リネーム"]
+Press_Enter_key_to_exit = ["Press Enter key to exit.","Enter キーを押すと終了します。"]
+
+def get_system_language():
+    # Windowsのロケール情報を取得
+    system_locale, _ = locale.getlocale()
+    if system_locale and system_locale.lower().startswith('ja'):
+        return 1  # 日本語
+    else:
+        return 0  # 英語
 
 def get_all_subfolders(path):
     subfolders = glob.glob(f"{path}/*/")
@@ -16,7 +37,7 @@ def get_all_subfolders(path):
         rename_and_move_files(subfolder)
 
 def rename_and_move_files(subfolder):
-    print('Target:', subfolder)
+    print(Target[language_index], subfolder)
     # 元のフォルダー
     save_subfolder_name = subfolder
     # 作業フォルダー
@@ -60,17 +81,18 @@ def record_start_time():
     return time.time()
 
 def notify_end(start_time, threshold=3):
-    print('Done.')
+    print(Done[language_index])
     end_time = time.time()
     processing_time = end_time - start_time
     if processing_time > threshold:
-        notification.notify(title=py_name, message="Done.", timeout=5)
+        notification.notify(title=py_name, message=Done[language_index], timeout=5)
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
     logging.disable( logging.CRITICAL )
     logging.debug('program begins.')
     py_name = os.path.basename(__file__)
+    language_index = get_system_language()
     try:
         path = sys.argv[1]
         logging.debug('path = {}'.format(path))
@@ -87,10 +109,10 @@ if __name__ == "__main__":
         elif os.path.isdir(path):
             # ルートディレクトリは許可しない
             if os.path.abspath(path) == os.path.abspath(os.path.join(path, os.pardir)):
-                print(f"root is not allow path: {path}")
-                raise ValueError(f"root is not allow path: {path}")
+                print(f"{root_is_not_allow_path[language_index]}: {path}")
+                raise ValueError(f"{root_is_not_allow_path[language_index]}: {path}")
         start_time = record_start_time()
         get_all_subfolders(path)
         notify_end(start_time)
     except (IndexError, ValueError):
-        print("Usage:", py_name, '"C:\\path"')
+        print(Usage[language_index], py_name, '"C:\\path"')

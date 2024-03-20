@@ -6,12 +6,33 @@ import random
 import string
 import logging
 import time
+import locale
 from plyer import notification
 import PySimpleGUI as sg
 import winreg
 import ctypes
 from ctypes import windll, create_unicode_buffer
 from functools import cmp_to_key
+
+# メッセージ ["English","Japanese"]
+root_is_not_allow_path = ["root is not allow path","ルートフォルダーは指定できません。"]
+Unsupported_policy_setting = ["Unsupported policy setting:\nTurn off numerical sorting in File Explorer 'NoStrCmpLogical'."
+,"非対応の環境:\nレジストリ 'NoStrCmpLogical' よりファイル名の表示順序が変更されています。"]
+Usage = ["Usage:","使い方:"]
+Target = ["Target:","処理中:"]
+Done = ["Done.","完了しました。"]
+Select_folder_that_you_want_to_serialized = ["Select folder that you want to serialized.","フォルダーを指定してください。"]
+Enable_logging = ["Enable logging.","動作ログを記録する"]
+Serialized = ["Serialized","リネーム"]
+Press_Enter_key_to_exit = ["Press Enter key to exit.","Enter キーを押すと終了します。"]
+
+def get_system_language():
+    # Windowsのロケール情報を取得
+    system_locale, _ = locale.getlocale()
+    if system_locale and system_locale.lower().startswith('ja'):
+        return 1  # 日本語
+    else:
+        return 0  # 英語
 
 def get_all_subfolders(path):
     subfolders = glob.glob(f"{path}/*/")
@@ -25,7 +46,7 @@ def StrCmpLogicalW_sort_cmp(a, b):
     return cmp_func(a, b)
 
 def rename_and_move_files(subfolder):
-    print('Target:', subfolder)
+    print(Target[language_index], subfolder)
     # 元のフォルダー
     save_subfolder_name = subfolder
     # 作業フォルダー
@@ -69,11 +90,11 @@ def record_start_time():
     return time.time()
 
 def notify_end(start_time, threshold=3):
-    print('Done.')
+    print(Done[language_index])
     end_time = time.time()
     processing_time = end_time - start_time
     if processing_time > threshold:
-        notification.notify(title=py_name, message="Done.", timeout=5)
+        notification.notify(title=py_name, message=Done[language_index], timeout=5)
 
 def check_winreg():
     # レジストリの値を取得
@@ -82,9 +103,9 @@ def check_winreg():
     name = "NoStrCmpLogical"
     try:
         value, _ = winreg.QueryValueEx(key, name)
-        if value == 1:
-            print("Unsupported policy setting:\nTurn off numerical sorting in File Explorer 'NoStrCmpLogical'.")
-            input("Press any key to exit.")
+        if value != 0:
+            print(Unsupported_policy_setting[language_index])
+            input(Press_Enter_key_to_exit[language_index])
             sys.exit()
     except FileNotFoundError:
         pass
@@ -94,9 +115,9 @@ def check_winreg():
     name = "NoStrCmpLogical"
     try:
         value, _ = winreg.QueryValueEx(key, name)
-        if value == 1:
-            print("Unsupported policy setting:\nTurn off numerical sorting in File Explorer 'NoStrCmpLogical'.")
-            input("Press any key to exit.")
+        if value != 0:
+            print(Unsupported_policy_setting[language_index])
+            input(Press_Enter_key_to_exit[language_index])
             sys.exit()
     except FileNotFoundError:
         pass
@@ -104,7 +125,7 @@ def check_winreg():
 def gui_event(event, values, window):
     if event == sg.WINDOW_CLOSED or event == 'Cancel':
         return False
-    elif event == 'Serialized':
+    elif event == Serialized[language_index]:
         path = values[0]
         enable_logging = values[1]
         if enable_logging == True:
@@ -124,8 +145,8 @@ def gui_event(event, values, window):
         elif os.path.isdir(path):
             # ルートディレクトリは許可しない
             if os.path.abspath(path) == os.path.abspath(os.path.join(path, os.pardir)):
-                print(f"root is not allow path: {path}")
-                raise ValueError(f"root is not allow path: {path}")
+                print(f"{root_is_not_allow_path[language_index]}: {path}")
+                raise ValueError(f"{root_is_not_allow_path[language_index]}: {path}")
                 sys.exit()
             start_time = record_start_time()
             get_all_subfolders(path)
@@ -137,9 +158,9 @@ def make_gui():
 
     # GUIのレイアウト
     layout = [
-        [sg.Text('Select folder that you want to serialized.')],
+        [sg.Text(Select_folder_that_you_want_to_serialized[language_index])],
         [sg.Input(), sg.FolderBrowse()],
-        [sg.Checkbox('Enable logging.'), sg.Column([[sg.Button('Serialized', size=(24,1))]],
+        [sg.Checkbox(Enable_logging[language_index]), sg.Column([[sg.Button(Serialized[language_index], size=(24,1))]],
         element_justification='right', expand_x=True, expand_y=True,)]
     ]
 
@@ -157,6 +178,7 @@ if __name__ == "__main__":
     logging.disable( logging.CRITICAL )
     logging.debug('program begins.')
     py_name = os.path.basename(__file__)
+    language_index = get_system_language()
     # DPIを指定する
     try:
         ctypes.windll.shcore.SetProcessDpiAwareness(True)
@@ -179,11 +201,11 @@ if __name__ == "__main__":
         elif os.path.isdir(path):
             # ルートディレクトリは許可しない
             if os.path.abspath(path) == os.path.abspath(os.path.join(path, os.pardir)):
-                print(f"root is not allow path: {path}")
-                raise ValueError(f"root is not allow path: {path}")
+                print(f"{root_is_not_allow_path[language_index]}: {path}")
+                raise ValueError(f"{root_is_not_allow_path[language_index]}: {path}")
         start_time = record_start_time()
         get_all_subfolders(path)
         notify_end(start_time)
     except (IndexError, ValueError):
-        print("Usage:", py_name, '"C:\\path"')
+        print(Usage[language_index], py_name, '"C:\\path"')
         window = make_gui()
